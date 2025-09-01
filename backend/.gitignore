@@ -1,1 +1,32 @@
+# Node modules
+node_modules/
+
+# Environment variables
 .env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific junk
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Dependency lock (optional, if you regenerate often)
+package-lock.json
+
+# Temporary uploads or storage (if used)
+uploads/
+storage/
+temp/
+
+# Build artifacts (if using bundlers or transpilers)
+dist/
+build/

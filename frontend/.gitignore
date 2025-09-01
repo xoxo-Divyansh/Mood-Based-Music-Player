@@ -10,7 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
-*.local
+*.config.local
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +22,25 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build outputs
+build/
+.cache/
+
+# Env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Model files (if large or not meant for versioning)
+public/models/*.shard1
+
+# Image uploads or temp assets (if dynamically generated)
+public/uploads/
+*.tmp
+*.bak
+
+# Coverage reports (if testing)
+coverage/
