@@ -4,23 +4,10 @@ import MoodSongs from './components/MoodSongs';
 import './App.css';
 
 function App() {
-  const [Songs, setSongs] = useState([
-        // {
-        //   title: "Song 1",
-        //   artist: "Artist 1",
-        //   mood: "happy",
-        //   url: "https://example.com/song1",
-        // },
-        // {
-        //   title: "Song 2",
-        //   artist: "Artist 2",
-        //   mood: "sad",
-        //   url: "https://example.com/song2",
-        // },
-  ]);
+  const [Songs, setSongs] = useState([]);
 
   return (
-    <div>
+    <div className="h-screen">
       {/* Facial Expression Detector → yaha se setSongs pass kar rahe hain */}
       <FacialExpression setSongs={setSongs} />
 
