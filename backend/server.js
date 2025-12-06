@@ -4,14 +4,21 @@ const connectDB = require("./src/db/db");
 
 const PORT = process.env.PORT || 3000;
 
-(async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (err) {
-    console.error("Failed to start server due to DB connection error");
-    process.exit(1);
-  }
-})();
+// 🔥 Root health-check required for Render
+app.get("/", (req, res) => {
+  res.send("Backend is running properly.");
+});
+
+async function startServer() {
+try {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+} catch (err) {
+  console.error(" DB Connection Error:", err);
+  process.exit(1);
+}
+}
+
+startServer();

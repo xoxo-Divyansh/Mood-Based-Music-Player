@@ -6,14 +6,11 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: "https://your-frontend-domain.com",
+  origin: "*",
   credentials: true
 }));
- // Allow requests from frontend
 
-// Health check for Render or other hosting platforms
-app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
-
+// Your APIs
 app.use("/", songRoutes);
 
 module.exports = app;
