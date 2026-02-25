@@ -6,16 +6,43 @@ const songModel = require("../models/song.model");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+const MOOD_MAP = {
+  happy: "happy",
+  sad: "sad",
+  angry: "angry",
+  neutral: "neutral",
+  surprised: "happy",
+  surprise: "happy",
+  fearful: "sad",
+  fear: "sad",
+  disgusted: "angry",
+  disgust: "angry",
+};
+
+const normalizeMood = (mood) => {
+  const key = String(mood || "").toLowerCase().trim();
+  return MOOD_MAP[key] || key;
+};
+
 // Upload song
 router.post("/songs", upload.single("audio"), async (req, res) => {
   try {
-    const fileData = await uploadFile(req.file);
+    if (!req.file) {
+      return res.status(400).json({ message: "Audio file is required" });
+    }
+
+    if (!req.body?.mood) {
+      return res.status(400).json({ message: "Mood is required" });
+    }
+
+    const normalizedMood = normalizeMood(req.body.mood);
+    const fileData = await uploadFile(req.file, normalizedMood);
 
     const song = await songModel.create({
       title: req.body.title,
       artist: req.body.artist,
       audio: fileData.url,
-      mood: req.body.mood.toLowerCase(),
+      mood: normalizedMood,
     });
 
     res.status(201).json({ message: "Song uploaded successfully", song });
@@ -31,19 +58,22 @@ router.get("/songs", async (req, res) => {
   if (!mood) return res.status(400).json({ message: "Mood query is required" });
 
   try {
-    console.log(`GET /songs - mood query received: "${mood}"`);
-
-    let songs = await songModel.find({ mood: mood.toLowerCase() });
+    const normalizedMood = normalizeMood(mood);
     console.log(
-      `DB returned ${songs.length} song(s) for mood='${mood.toLowerCase()}'`
+      `GET /songs - mood query received: "${mood}", resolved to "${normalizedMood}"`
+    );
+
+    let songs = await songModel.find({ mood: normalizedMood });
+    console.log(
+      `DB returned ${songs.length} song(s) for mood='${normalizedMood}'`
     );
 
     if (!songs.length) {
-      const fallback = await listFilesByMood(mood);
+      const fallback = await listFilesByMood(normalizedMood);
       console.log(
         `ImageKit fallback returned ${
           fallback.length
-        } file(s) for mood='${mood.toLowerCase()}'`
+        } file(s) for mood='${normalizedMood}'`
       );
       songs = fallback;
     }
@@ -58,6 +88,8 @@ router.get("/songs", async (req, res) => {
     res.status(200).json({
       message: "Songs fetched successfully",
       songs,
+      requestedMood: String(mood).toLowerCase(),
+      resolvedMood: normalizedMood,
     });
   } catch (err) {
     console.error("Fetch Error:", err);
