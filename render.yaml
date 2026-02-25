@@ -8,7 +8,7 @@ services:
     healthCheckPath: /
     autoDeploy: true
 
-  - type: static
+  - type: static_site
     name: mood-music-frontend
     rootDir: frontend
     buildCommand: npm ci && npm run build
